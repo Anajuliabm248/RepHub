@@ -1,471 +1,153 @@
-# RepHub
+# 🏡 RepHub
+
 Trabalho final de POOWeb II, utilizando SpringBoot e API REST. Gerenciador para repúnlicas
 > Ana júlia Bock Medina, SPI-UFSM
 
-Projeto de sistema web para gerenciamento de repúblicas e moradias compartilhadas, criado com foco em organização, convivência e controle financeiro entre moradores.
+O **RepHub** é um sistema para organização e gerenciamento de repúblicas e moradias compartilhadas.
 
-A proposta do projeto é centralizar em um único sistema tarefas domésticas, despesas, pagamentos, votações, avisos, histórico de eventos e informações financeiras da república.
+O projeto tem como objetivo reunir em um único ambiente funcionalidades relacionadas aos moradores, tarefas domésticas, despesas, pagamentos e comunicação básica da casa.
 
-Além das funcionalidades tradicionais de gerenciamento, o sistema também contará com recursos de gamificação, como ranking de tarefas concluídas e um **Índice de Caos Republicano**, responsável por representar de forma divertida o nível atual de desorganização da casa.
+Esta será a primeira versão acadêmica do projeto. Ela foi planejada para possuir um conjunto completo de funcionalidades próprias, mas também permitir que o sistema continue evoluindo em novas versões após o desenvolvimento inicial.
 
-## Objetivo do projeto
+## ⚙️ Funcionalidades desta versão
 
-O objetivo do RepúblicaHub é facilitar a administração de uma moradia compartilhada, permitindo que os próprios moradores acompanhem as responsabilidades da casa e tenham maior transparência sobre despesas e atividades.
+### 👥 Usuários e repúblicas
 
-O projeto também foi pensado como uma aplicação para estudo e prática de desenvolvimento backend utilizando **Spring Boot e API REST**, explorando autenticação, regras de negócio, persistência de dados, documentação de API, testes e outras ferramentas do ecossistema Spring.
+O sistema permitirá o cadastro de usuários e a criação de repúblicas.
 
-## Principais funcionalidades
+O usuário responsável pela criação da república será automaticamente definido como **ADMIN**.
 
-### Usuários e repúblicas
+Outros usuários poderão entrar na república utilizando um código de convite de uso único, recebendo inicialmente o papel de **MORADOR**.
 
-O sistema permitirá que novos usuários criem uma conta e escolham entre:
+Nesta versão, cada usuário poderá possuir apenas uma participação ativa em uma república por vez.
 
-* criar uma nova república;
-* entrar em uma república existente utilizando um código de convite.
+### ✉️ Convites
 
-O usuário que criar uma república será automaticamente registrado como **ADMIN**.
+Administradores poderão gerar códigos para convidar novos moradores.
 
-Usuários que entrarem através de convite serão registrados como **MORADOR**.
+Cada código será único e poderá ser utilizado apenas uma vez.
 
-Um mesmo usuário poderá participar de diferentes repúblicas e possuir papéis diferentes em cada uma delas.
+Após sua utilização, uma nova participação será criada para o usuário dentro da república.
 
-### Administração da república
+### 🧹 Tarefas domésticas
 
-Administradores poderão realizar ações como:
+Os moradores poderão cadastrar e acompanhar tarefas domésticas da república.
 
-* gerenciar moradores;
-* gerar convites;
-* remover moradores;
-* promover moradores;
-* alterar configurações da república.
+Uma tarefa poderá possuir:
 
-Os convites possuirão códigos únicos e serão de **uso único**.
+* título;
+* descrição;
+* prazo;
+* responsável;
+* status.
 
-### Gestão de despesas
+Inicialmente, os estados disponíveis serão **PENDENTE** e **CONCLUÍDA**.
 
-Os moradores poderão cadastrar despesas relacionadas à república, como:
+O objetivo é permitir uma organização simples das responsabilidades da casa.
 
-* aluguel;
-* água;
-* energia;
-* internet;
-* mercado;
-* produtos de limpeza;
-* manutenção;
-* lazer;
-* outras despesas.
+### ⚠️ Quadro de avisos
 
-As despesas poderão ser divididas de duas formas:
+Cada república possuirá um quadro de avisos simples, inspirado nas tradicionais notas deixadas na geladeira.
 
-**Divisão igual:** o valor é distribuído igualmente entre os moradores selecionados.
+Os moradores poderão publicar recados contendo título, mensagem, autor e data de publicação.
 
-**Divisão personalizada:** cada participante possui um valor específico a pagar.
+### 💸 Despesas
 
-O sistema deverá controlar o valor devido, o valor já pago e o status de cada divisão.
+O sistema permitirá cadastrar despesas relacionadas à república, como aluguel, água, energia, internet, mercado, limpeza, manutenção e lazer.
 
-### Pagamentos
+Cada despesa poderá ser dividida entre os moradores de duas formas:
 
-Os pagamentos estarão relacionados às divisões das despesas.
+* **igual**, distribuindo o valor entre os participantes selecionados;
+* **personalizada**, permitindo definir valores diferentes para cada participante.
 
-Será possível registrar pagamentos por:
+O sistema armazenará quanto cada morador deve dentro de uma determinada despesa.
 
-* PIX;
-* dinheiro;
-* transferência;
-* cartão;
-* outras formas.
+### 💳 Pagamentos
 
-Pagamentos parciais poderão ser registrados.
+Os moradores poderão registrar pagamentos referentes às suas divisões de despesas.
 
-O sistema também deverá impedir que o valor confirmado ultrapasse o valor devido pelo participante.
+Serão permitidos pagamentos parciais, permitindo acompanhar:
 
-### Extrato financeiro
+* valor devido;
+* valor já pago;
+* valor ainda pendente;
+* situação da divisão.
 
-Cada morador poderá acessar seu próprio extrato financeiro e descobrir quanto custou morar na república em determinado período.
+Pagamentos poderão ser registrados por PIX, dinheiro, transferência, cartão ou outras formas.
 
-As consultas poderão ser feitas por:
+### 📈 Extrato financeiro
+
+O RepúblicaHub permitirá que cada morador consulte quanto custou morar na república em determinado período.
+
+O extrato poderá ser consultado por:
 
 * mês;
 * intervalo de meses;
 * ano;
-* todo o período em que o usuário participou da república.
+* todo o período.
 
-O extrato poderá apresentar informações como:
+O sistema poderá apresentar:
 
-* custo total no período;
-* valor já pago;
+* custo do morador no período;
+* total já pago;
 * valor pendente;
 * média mensal;
-* maior custo mensal;
-* menor custo mensal;
-* evolução dos gastos;
-* variação percentual entre períodos;
-* distribuição dos gastos por categoria.
+* maior e menor custo mensal;
+* total gasto pela república;
+* distribuição das despesas por categoria;
+* evolução dos gastos ao longo do tempo;
+* aumento ou redução dos custos entre períodos.
 
-O sistema também deverá permitir visualizar a evolução dos custos através de gráficos e indicadores de aumento ou diminuição.
+O custo individual será calculado de acordo com as despesas realmente atribuídas ao morador.
 
-Exemplo:
+Assim, uma divisão personalizada não será tratada como uma simples divisão do valor total pelo número de moradores.
 
-```text
-Julho
-R$ 980,00
+## 💻 Tecnologias previstas
 
-Agosto
-R$ 1.100,00
+O projeto será desenvolvido principalmente utilizando:
 
-Variação
-+12,24%
-```
+* Java;
+* Spring Boot;
+* Spring Web;
+* Spring Data JPA;
+* PostgreSQL;
+* API REST.
 
-O custo individual de um morador será calculado com base nas divisões de despesas atribuídas a ele, e não simplesmente pela divisão do total da república pelo número de moradores.
+Outras tecnologias e bibliotecas poderão ser adicionadas conforme a evolução do projeto.
 
-### Tarefas domésticas
+## 🗺️ Diagrama de classes
+Encontrada em: [Docs/diagrama_de_classes.png](Docs/diagrama_de_classes.png)
 
-Os moradores poderão criar e acompanhar tarefas como:
+## 🌱 Evolução do RepHub
 
-* lavar a louça;
-* limpar a cozinha;
-* levar o lixo;
-* limpar o banheiro;
-* comprar produtos;
-* organizar áreas comuns.
+Esta versão representa o primeiro núcleo funcional do sistema.
 
-Cada tarefa poderá possuir:
+O objetivo não é considerar o RepHub encerrado após a entrega do trabalho. O projeto continuará evoluindo através de novas versões independentes, cada uma acrescentando novos recursos ao sistema existente.
 
-* responsável;
-* prioridade;
-* prazo;
-* status;
-* pontuação.
+Entre as possíveis evoluções estão:
 
-Uma tarefa poderá inicialmente não possuir responsável e ser atribuída posteriormente.
+* autenticação e autorização mais completas;
+* múltiplas repúblicas por usuário;
+* gerenciamento avançado de moradores;
+* votações;
+* histórico e auditoria;
+* tarefas com prioridades;
+* pontuação por tarefas;
+* ranking entre moradores;
+* conquistas e gamificação;
+* Índice de Caos Republicano;
+* gráficos e dashboards mais avançados;
+* notificações;
+* calendário compartilhado;
+* frontend completo;
+* testes automatizados;
+* Docker e deploy.
 
-### Ranking de tarefas
+Dessa forma, cada nova versão poderá ampliar o RepúblicaHub sem invalidar as funcionalidades já desenvolvidas.
 
-As tarefas concluídas poderão gerar pontos para os moradores.
+## 🚧 Status
 
-Esses pontos serão utilizados para criar um ranking interno da república.
+🏗️ **Versão acadêmica inicial em desenvolvimento.**
+ver mais em: [Docs](docs/)
 
-Exemplo:
-
-```text
-🏆 Ranking da República
-
-1. Ana      320 pontos
-2. Bianca   275 pontos
-3. Carla    210 pontos
-```
-
-O ranking poderá considerar informações como:
-
-* quantidade de tarefas concluídas;
-* pontuação total;
-* posição atual;
-* participação nas atividades da casa.
-
-### Índice de Caos Republicano
-
-O sistema possuirá um indicador chamado **Índice de Caos Republicano**.
-
-O índice será calculado com base em situações como:
-
-* tarefas atrasadas;
-* tarefas pendentes;
-* despesas vencidas;
-* pagamentos pendentes.
-
-O valor poderá variar entre `0` e `100`.
-
-Exemplo:
-
-```text
-0 - 20
-República zen
-
-21 - 40
-Leve bagunça
-
-41 - 60
-Caos administrável
-
-61 - 80
-Situação duvidosa
-
-81 - 100
-A casa venceu
-```
-
-O objetivo dessa funcionalidade é apresentar informações importantes da casa de maneira mais divertida e gamificada.
-
-### Votações
-
-Moradores poderão criar votações para decisões internas.
-
-Exemplos:
-
-```text
-Devemos trocar o plano de internet?
-
-Qual será o dia da faxina?
-
-Devemos comprar uma air fryer?
-
-Qual produto devemos comprar para a casa?
-```
-
-As votações poderão ser dos tipos:
-
-* SIM/NÃO;
-* múltipla escolha.
-
-Cada participante poderá votar apenas uma vez por votação.
-
-Votações encerradas ou canceladas não poderão receber novos votos.
-
-### Quadro de avisos
-
-Cada república possuirá um quadro de avisos simples, funcionando como uma versão digital das tradicionais notas deixadas na geladeira.
-
-Os avisos possuirão:
-
-* título;
-* mensagem;
-* autor;
-* data de publicação.
-
-Exemplo:
-
-```text
-Comprar papel higiênico
-
-Acabou de novo.
-Quem passar no mercado hoje, por favor compre.
-```
-
-### Histórico e auditoria
-
-O sistema manterá um histórico de acontecimentos importantes da república.
-
-Alguns exemplos:
-
-```text
-Morador entrou na república
-
-Morador saiu da república
-
-Despesa criada
-
-Despesa alterada
-
-Pagamento realizado
-
-Tarefa concluída
-
-Votação criada
-
-Aviso publicado
-```
-
-O histórico possui caráter apenas informativo.
-
-Ele **não será utilizado para restauração de versões ou rollback**.
-
-Registros históricos não poderão ser editados pelos usuários e continuarão disponíveis mesmo depois que um morador deixar a república.
-
-## Papéis do sistema
-
-Inicialmente existirão dois papéis:
-
-### ADMIN
-
-Responsável por administrar a república.
-
-Entre suas permissões estarão:
-
-```text
-Gerenciar moradores
-Gerenciar convites
-Alterar configurações
-Remover moradores
-Promover moradores
-```
-
-### MORADOR
-
-Participante comum da república.
-
-Entre suas ações estarão:
-
-```text
-Cadastrar despesas
-Realizar pagamentos
-Concluir tarefas
-Participar de votações
-Publicar avisos
-Consultar seu próprio extrato
-```
-
-## Principais entidades
-
-O domínio inicial será composto pelas seguintes entidades:
-
-```text
-Usuario
-Republica
-ParticipacaoRepublica
-ConviteRepublica
-Despesa
-DivisaoDespesa
-Pagamento
-TarefaDomestica
-Votacao
-OpcaoVotacao
-Voto
-Aviso
-HistoricoEvento
-```
-
-A entidade `ParticipacaoRepublica` representa o vínculo entre um usuário e uma república.
-
-Isso permite, por exemplo, que um mesmo usuário seja:
-
-```text
-ADMIN na República A
-
-MORADOR na República B
-```
-
-sem precisar criar subclasses diferentes de usuário.
-
-## Estrutura conceitual
-**ver diagrama completo em: [Diagrama de classe](diagrama_classe.png)
-
-```text
-                         Usuario
-                            |
-                            v
-                ParticipacaoRepublica
-                            |
-                            v
-                        Republica
-                            |
-          +-----------------+----------------+
-          |                 |                |
-          v                 v                v
-       Despesa       TarefaDomestica      Votacao
-          |                                  |
-          v                                  v
-   DivisaoDespesa                      OpcaoVotacao
-          |                                  |
-          v                                  v
-      Pagamento                             Voto
-
-                        Republica
-                            |
-                +-----------+-----------+
-                |                       |
-                v                       v
-              Aviso              HistoricoEvento
-
-                        Republica
-                            |
-                            v
-                    ConviteRepublica
-```
-
-## Funcionalidades calculadas
-
-Algumas funcionalidades não representarão diretamente tabelas no banco.
-
-Serão calculadas através de serviços da aplicação.
-
-```text
-RankingService
-
-IndiceCaosService
-
-ExtratoFinanceiroService
-
-HistoricoService
-```
-
-Esses serviços utilizarão as informações das entidades para produzir resultados para a API.
-
-## Tecnologias previstas
-
-O projeto será desenvolvido utilizando:
-
-```text
-Java
-Spring Boot
-Spring Web
-Spring Data JPA
-PostgreSQL
-Flyway
-Swagger / OpenAPI
-```
-
-Outras bibliotecas poderão ser adicionadas conforme a evolução do projeto.
-
-## Fluxo inicial do usuário
-
-```text
-Criar conta
-    |
-    v
-Escolher uma opção
-    |
-    +---------------------------+
-    |                           |
-    v                           v
-Criar República          Entrar por convite
-    |                           |
-    v                           v
-Recebe ADMIN              Recebe MORADOR
-    |                           |
-    +-------------+-------------+
-                  |
-                  v
-              Dashboard
-```
-
-## Página inicial
-
-A aplicação deverá possuir uma página pública apresentando o propósito do RepúblicaHub.
-
-A página terá acesso para:
-
-```text
-Entrar
-
-Criar conta
-
-Criar uma república
-
-Entrar em uma república por convite
-```
-
-## Status
-
-> 🚧 Projeto em desenvolvimento.
-
-## Ideias futuras
-
-Algumas funcionalidades poderão ser adicionadas posteriormente:
-
-```text
-Conquistas e medalhas
-Sequência de tarefas concluídas
-Desafios entre moradores
-Calendário compartilhado
-Notificações
-Metas financeiras
-Comparação de gastos entre meses
-Relatórios
-Histórico do Índice de Caos
-Ranking mensal
-Estatísticas da república
-```
-
-A ideia é que o RepúblicaHub continue crescendo sem perder sua proposta principal: transformar a organização de uma casa compartilhada em algo mais simples, transparente e um pouco menos caótico.
-
+O RepúblicaHub foi planejado como um projeto de evolução contínua, permitindo que novas funcionalidades sejam incorporadas gradualmente conforme novos conceitos e tecnologias forem estudados.
