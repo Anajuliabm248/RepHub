@@ -1,0 +1,2 @@
+ALTER TABLE participacao
+    ADD COLUMN IF NOT EXISTS papel SMALLINT;
