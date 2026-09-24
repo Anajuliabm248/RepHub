@@ -431,10 +431,6 @@ Criar uma república
 Entrar em uma república por convite
 ```
 
-## Status
-
-> 🚧 Projeto em desenvolvimento.
-
 ## Ideias futuras
 
 Algumas funcionalidades poderão ser adicionadas posteriormente:
@@ -453,5 +449,5 @@ Ranking mensal
 Estatísticas da república
 ```
 
-A ideia é que o RepúblicaHub continue crescendo sem perder sua proposta principal: transformar a organização de uma casa compartilhada em algo mais simples, transparente e um pouco menos caótico.
+A ideia é que o RepHub continue crescendo sem perder sua proposta principal: transformar a organização de uma casa compartilhada em algo mais simples, transparente e um pouco menos caótico.
 
