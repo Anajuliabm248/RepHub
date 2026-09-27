@@ -8,8 +8,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -60,6 +65,7 @@ public class UsuarioController {
     }
 
     @PostMapping
+    @Transactional
     @Operation(
             summary = "Criar um novo Usuário",
             description = "Salva um novo usuário no banco de dados"
@@ -79,11 +85,15 @@ public class UsuarioController {
                     description = "Erro interno do servidor"
             )
     })
-    public void salvar(@RequestBody Usuario usuario) {
+    public ResponseEntity salvar(@RequestBody @Valid Usuario usuario, UriComponentsBuilder uriBuilder) {
+
         this.usuarioService.salvar(usuario);
+        URI uri = uriBuilder.path("/usuario/{id}").buildAndExpand(usuario.getId()).toUri();
+        return ResponseEntity.created(uri).body(usuario);
     }
 
     @PutMapping
+    @Transactional
     @Operation(
             summary = "Atualizar um usuário existente",
             description = "Atualiza os dados de um usuário cadastrado no banco de dados"
@@ -108,8 +118,9 @@ public class UsuarioController {
                     description = "Erro interno do servidor"
             )
     })
-    public void atualizar(@RequestBody Usuario usuario) {
+    public ResponseEntity atualizar(@RequestBody Usuario usuario) {
         this.usuarioService.atualizar(usuario);
+        return ResponseEntity.ok(usuario);
     }
 
     @DeleteMapping("/{id}")
@@ -132,8 +143,9 @@ public class UsuarioController {
                     description = "Erro interno do servidor"
             )
     })
-    public void deletar(@PathVariable Long id) {
+    public ResponseEntity deletar(@PathVariable Long id) {
         this.usuarioService.excluir(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/uuid/{uuid}")
@@ -165,6 +177,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/uuid")
+    @Transactional
     @Operation(
             summary = "Atualizar usuário por UUID",
             description = "Atualiza os dados de um usuário utilizando seu UUID como identificador"
@@ -189,8 +202,9 @@ public class UsuarioController {
                     description = "Erro interno do servidor"
             )
     })
-    public void atualizarUUID(@RequestBody Usuario usuario) {
+    public ResponseEntity atualizarUUID(@RequestBody Usuario usuario) {
         this.usuarioService.atualizarUUID(usuario);
+        return ResponseEntity.ok(usuario);
     }
 
 }

@@ -2,6 +2,7 @@ package br.csi.rep_hub.model.participacao;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -14,7 +15,6 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 @Schema(description = "Representa uma participação de um usuário em uma república")
 public class ParticipacaoRepublica {
     @UuidGenerator
@@ -26,20 +26,18 @@ public class ParticipacaoRepublica {
     @Schema(description = "ID da participação da república", example = "1")
     private Long id;
 
-
     @Enumerated
     @Column(name = "papel")
-    @NonNull
+    @NotBlank
     @Schema(description = "Papel da participação na república", example = "MORADOR")
     private PapelRepublica papel;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    @NonNull
+    @NotBlank
     @Schema(description = "Status da participação na república", example = "ATIVO")
     private StatusParticipacao status;
 
-    @NonNull
     @Schema(description = "Data de entrada da participação na república", example = "2023-01-01T00:00:00")
     private LocalDateTime dataEntrada;
 }

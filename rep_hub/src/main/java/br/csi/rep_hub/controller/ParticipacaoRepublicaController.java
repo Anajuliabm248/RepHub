@@ -8,8 +8,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -59,6 +64,7 @@ public class ParticipacaoRepublicaController {
     }
 
     @PostMapping
+    @Transactional
     @Operation(
             summary = "Criar um novo participação de república",
             description = "Salva um novo participação de república no banco de dados"
@@ -78,11 +84,14 @@ public class ParticipacaoRepublicaController {
                     description = "Erro interno do servidor"
             )
     })
-    public void salvar(@RequestBody ParticipacaoRepublica participacao) {
+    public ResponseEntity salvar(@RequestBody @Valid ParticipacaoRepublica participacao, UriComponentsBuilder uriBuilder) {
         this.participacaoService.salvar(participacao);
+        URI uri = uriBuilder.path("/participacao/{id}").buildAndExpand(participacao.getId()).toUri();
+        return ResponseEntity.created(uri).body(participacao);
     }
 
     @PutMapping
+    @Transactional
     @Operation(
             summary = "Atualizar uma nova participação de república existente",
             description = "Atualiza os dados de um nova participação de república cadastrado no banco de dados"
@@ -107,8 +116,9 @@ public class ParticipacaoRepublicaController {
                     description = "Erro interno do servidor"
             )
     })
-    public void atualizar(@RequestBody  ParticipacaoRepublica participacao) {
+    public ResponseEntity atualizar(@RequestBody  ParticipacaoRepublica participacao) {
         this.participacaoService.atualizar(participacao);
+        return ResponseEntity.ok(participacao);
     }
 
     @DeleteMapping("/{id}")
@@ -131,8 +141,10 @@ public class ParticipacaoRepublicaController {
                     description = "Erro interno do servidor"
             )
     })
-    public void deletar(@PathVariable Long id) {
+    public ResponseEntity deletar(@PathVariable Long id) {
+
         this.participacaoService.excluir(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/uuid/{uuid}")
@@ -188,7 +200,8 @@ public class ParticipacaoRepublicaController {
                     description = "Erro interno do servidor"
             )
     })
-    public void atualizarUUID(@RequestBody  ParticipacaoRepublica participacao) {
+    public ResponseEntity atualizarUUID(@RequestBody  ParticipacaoRepublica participacao) {
         this.participacaoService.atualizarUUID(participacao);
+        return ResponseEntity.ok(participacao);
     }
 }

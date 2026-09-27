@@ -8,8 +8,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -60,6 +64,7 @@ public class RepublicaController {
     }
 
     @PostMapping
+    @Transactional
     @Operation(
             summary = "Criar um novo República",
             description = "Salva um novo república no banco de dados"
@@ -79,11 +84,15 @@ public class RepublicaController {
                     description = "Erro interno do servidor"
             )
     })
-    public void salvar(@RequestBody  Republica republica) {
+    public ResponseEntity salvar(@RequestBody  Republica republica, UriComponentsBuilder uriBuilder) {
+
         this.republicaService.salvar(republica);
+        URI uri = uriBuilder.path("/republica/{id}").buildAndExpand(republica.getId()).toUri();
+        return ResponseEntity.created(uri).body(republica);
     }
 
     @PutMapping
+    @Transactional
     @Operation(
             summary = "Atualizar um república existente",
             description = "Atualiza os dados de um república cadastrado no banco de dados"
@@ -108,8 +117,10 @@ public class RepublicaController {
                     description = "Erro interno do servidor"
             )
     })
-    public void atualizar(@RequestBody  Republica republica) {
+    public ResponseEntity atualizar(@RequestBody  Republica republica) {
+
         this.republicaService.atualizar(republica);
+        return ResponseEntity.ok(republica);
     }
 
     @DeleteMapping("/{id}")
@@ -132,8 +143,10 @@ public class RepublicaController {
                     description = "Erro interno do servidor"
             )
     })
-    public void deletar(@PathVariable Long id) {
+    public ResponseEntity deletar(@PathVariable Long id) {
+
         this.republicaService.excluir(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/uuid/{uuid}")
@@ -165,6 +178,7 @@ public class RepublicaController {
     }
 
     @PutMapping("/uuid")
+    @Transactional
     @Operation(
             summary = "Atualizar república por UUID",
             description = "Atualiza os dados de um república utilizando seu UUID como identificador"
@@ -189,7 +203,9 @@ public class RepublicaController {
                     description = "Erro interno do servidor"
             )
     })
-    public void atualizarUUID(@RequestBody  Republica republica) {
+    public ResponseEntity atualizarUUID(@RequestBody  Republica republica) {
+
         this.republicaService.atualizarUUID(republica);
+        return ResponseEntity.ok(republica);
     }
 }

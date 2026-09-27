@@ -2,6 +2,9 @@ package br.csi.rep_hub.model.usuario;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -14,7 +17,6 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 @Schema(description = "Representa um usuário cadastrado no sistema")
 public class Usuario {
     @UuidGenerator
@@ -26,23 +28,23 @@ public class Usuario {
     @Schema(description = "ID do usuário", example = "1")
     private Long id;
 
-    @NonNull
+    @NotBlank
     @Schema(description = "Nome do usuário", example = "Ana Medina")
     private String nome;
 
-    @NonNull
+    @NotBlank
+    @Email(message = "Email inválido")
     @Schema(description = "Email do usuário", example = "ana.medina@example.com")
     private String email;
 
-    @NonNull
+    @NotBlank
+    @Size(min = 8, message = "A senha deve ter pelo menos 8 caracteres")
     @Schema(description = "Senha do usuário", example = "senha123")
     private String senha;
 
-    @NonNull
     @Schema(description = "Data de cadastro do usuário", example = "2024-06-01T12:00:00")
     private LocalDateTime dataCadastro;
 
-    @NonNull
     @Schema(description = "Indica se o usuário está ativo", example = "true")
     private boolean ativo;
 

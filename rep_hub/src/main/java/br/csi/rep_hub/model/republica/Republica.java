@@ -6,11 +6,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -23,7 +22,6 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 @Schema(description = "Representa uma república cadastrada no sistema")
 public class Republica {
     @UuidGenerator
@@ -35,14 +33,13 @@ public class Republica {
     @Schema(description = "ID da república", example = "1")
     private Long id;
 
-    @NonNull
+    @NotBlank
     @Schema(description = "Nome da república", example = "República dos Estudantes")
     private String nome;
 
     @Schema(description = "Descrição da república, opcional", example = "República localizada no centro da cidade")
     private String descricao;
 
-    @NonNull
     @Schema(description = "Data de criação da república", example = "2023-01-01T00:00:00")
     private LocalDateTime dataCriacao;
 
