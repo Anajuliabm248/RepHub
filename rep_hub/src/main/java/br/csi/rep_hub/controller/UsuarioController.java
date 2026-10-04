@@ -87,7 +87,7 @@ public class UsuarioController {
     })
     public ResponseEntity salvar(@RequestBody @Valid Usuario usuario, UriComponentsBuilder uriBuilder) {
 
-        this.usuarioService.salvar(usuario);
+        this.usuarioService.cadastrar(usuario);
         URI uri = uriBuilder.path("/usuario/{id}").buildAndExpand(usuario.getId()).toUri();
         return ResponseEntity.created(uri).body(usuario);
     }
@@ -145,6 +145,31 @@ public class UsuarioController {
     })
     public ResponseEntity deletar(@PathVariable Long id) {
         this.usuarioService.excluir(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{uuid}")
+    @Operation(
+            summary = "Excluir usuário",
+            description = "Remove um usuário do banco de dados utilizando seu ID"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Usuário excluído com sucesso"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Usuário não encontrado",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Erro interno do servidor"
+            )
+    })
+    public ResponseEntity deletarUUID(@PathVariable String uuid) {
+        this.usuarioService.deletarUUID(uuid);
         return ResponseEntity.noContent().build();
     }
 
