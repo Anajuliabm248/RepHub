@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.Instant;
@@ -35,6 +36,7 @@ public class Convite {
     private String codigo;
 
     @Schema(description = "Data de criação do convite")
+    @CreationTimestamp
     private Instant dataCriacao;
 
     @Schema(description = "Data de expiração do convite")

@@ -40,7 +40,7 @@ public class Despesa {
     private Republica republica;
 
     @NotBlank
-    @Schema(description = "Título de uma despesa", example = "República coisa de Nerd")
+    @Schema(description = "Título de uma despesa", example = "Internet")
     private String titulo;
 
     @Schema(description = "Descrição de uma despesa")

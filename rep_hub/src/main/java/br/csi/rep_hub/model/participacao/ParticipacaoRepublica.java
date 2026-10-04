@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
@@ -39,5 +40,6 @@ public class ParticipacaoRepublica {
     private StatusParticipacao status;
 
     @Schema(description = "Data de entrada da participação na república", example = "2023-01-01T00:00:00")
+    @CreationTimestamp
     private LocalDateTime dataEntrada;
 }

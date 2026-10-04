@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
@@ -43,6 +44,7 @@ public class Usuario {
     private String senha;
 
     @Schema(description = "Data de cadastro do usuário", example = "2024-06-01T12:00:00")
+    @CreationTimestamp
     private LocalDateTime dataCadastro;
 
     @Schema(description = "Indica se o usuário está ativo", example = "true")

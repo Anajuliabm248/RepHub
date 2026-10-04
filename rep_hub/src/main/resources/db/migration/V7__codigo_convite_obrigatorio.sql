@@ -1,0 +1,2 @@
+ALTER TABLE convite
+    ALTER COLUMN codigo SET NOT NULL;

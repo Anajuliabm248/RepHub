@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
@@ -41,6 +42,7 @@ public class Republica {
     private String descricao;
 
     @Schema(description = "Data de criação da república", example = "2023-01-01T00:00:00")
+    @CreationTimestamp
     private LocalDateTime dataCriacao;
 
     @Schema(description = "Indica se a república está ativa", example = "true")
