@@ -6,5 +6,4 @@ import java.util.UUID;
 
 public interface RepublicaRepository extends JpaRepository<Republica, Long> {
     Republica findRepublicaByUuid(UUID uuid);
-    void deleteRepublicaByUuid(UUID uuid);
 }

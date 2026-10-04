@@ -28,6 +28,7 @@ public class Convite {
     private Long id;
 
     @UuidGenerator
+    @Column(nullable = false, unique = true, updatable = false)
     @Schema(description = "UUID do convite para participar da república")
     private UUID uuid;
 

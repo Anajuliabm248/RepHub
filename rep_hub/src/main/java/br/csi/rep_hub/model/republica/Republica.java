@@ -2,6 +2,7 @@ package br.csi.rep_hub.model.republica;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,7 +15,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -26,6 +27,7 @@ import java.util.UUID;
 @Schema(description = "Representa uma república cadastrada no sistema")
 public class Republica {
     @UuidGenerator
+    @Column(nullable = false, unique = true, updatable = false)
     @Schema(description = "UUID da república", example = "123e4567-e89b-12d3-a456-426614174000")
     private UUID uuid;
 
@@ -43,7 +45,7 @@ public class Republica {
 
     @Schema(description = "Data de criação da república", example = "2023-01-01T00:00:00")
     @CreationTimestamp
-    private LocalDateTime dataCriacao;
+    private Instant dataCriacao;
 
     @Schema(description = "Indica se a república está ativa", example = "true")
     private boolean ativa;

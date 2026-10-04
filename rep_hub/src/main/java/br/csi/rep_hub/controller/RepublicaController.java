@@ -1,211 +1,143 @@
 package br.csi.rep_hub.controller;
 
-import br.csi.rep_hub.model.republica. Republica;
-import br.csi.rep_hub.service. RepublicaService;
+import br.csi.rep_hub.controller.dto.RepublicaDados;
+import br.csi.rep_hub.controller.dto.RepublicaResposta;
+import br.csi.rep_hub.service.RepublicaService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping
-@Tag(name = "Republica", description = "Endpoints relacionados a repúblicas")
+@RequestMapping("/republica")
+@Tag(name = "República")
 public class RepublicaController {
-    private final  RepublicaService republicaService;
+    private final RepublicaService republicas;
 
-    public RepublicaController(RepublicaService republicaService) {
-        this.republicaService = republicaService;
+    public RepublicaController(RepublicaService republicas) {
+        this.republicas = republicas;
     }
 
-
     @GetMapping("/listar")
-    @Operation(summary = "Listar repúblicas", description = "Retorna uma lista de todas as repúblicas cadastradas")
-    @ApiResponse(
-            responseCode = "200",
-            description = "Lista de repúblicas retornada com sucesso",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation =  Republica.class)))
-    @ApiResponse(
-            responseCode = "404",
-            description = "Nenhuma república encontrado")
-    @ApiResponse(
-            responseCode = "500",
-            description = "Erro interno do servidor")
-    public List< Republica> listar(){
-        return this.republicaService.listarTodos();
+    @Operation(summary = "Listar minhas repúblicas", description = "Retorna as repúblicas ativas das quais o usuário participa",
+            security = @SecurityRequirement(name = "basicAuth"))
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Lista retornada, possivelmente vazia",
+                    content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RepublicaResposta.class)))),
+            @ApiResponse(responseCode = "401", description = "Autenticação necessária"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    public List<RepublicaResposta> listar() {
+        return republicas.listarTodos();
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Obter república", description = "Retorna os detalhes de um república específico")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "República retornado com sucesso",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation =  Republica.class))),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Nenhum república encontrado"),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Erro interno do servidor")
+    @Operation(summary = "Consultar república por ID", description = "Consulta uma república da qual o usuário participa",
+            security = @SecurityRequirement(name = "basicAuth"))
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "República retornada",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = RepublicaResposta.class))),
+            @ApiResponse(responseCode = "400", description = "ID inválido"),
+            @ApiResponse(responseCode = "401", description = "Autenticação necessária"),
+            @ApiResponse(responseCode = "403", description = "Participação ativa necessária"),
+            @ApiResponse(responseCode = "404", description = "República não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    public  Republica republica(@PathVariable Long id){
-        return this.republicaService.getRepublica(id);
-    }
-
-    @PostMapping
-    @Transactional
-    @Operation(
-            summary = "Criar um novo República",
-            description = "Salva um novo república no banco de dados"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "República criado com sucesso"
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Requisição inválida",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Erro interno do servidor"
-            )
-    })
-    public ResponseEntity salvar(@RequestBody  Republica republica, UriComponentsBuilder uriBuilder) {
-
-        this.republicaService.salvar(republica);
-        URI uri = uriBuilder.path("/republica/{id}").buildAndExpand(republica.getId()).toUri();
-        return ResponseEntity.created(uri).body(republica);
-    }
-
-    @PutMapping
-    @Transactional
-    @Operation(
-            summary = "Atualizar um república existente",
-            description = "Atualiza os dados de um república cadastrado no banco de dados"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "República atualizado com sucesso"
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Requisição inválida",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "República não encontrado",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Erro interno do servidor"
-            )
-    })
-    public ResponseEntity atualizar(@RequestBody  Republica republica) {
-
-        this.republicaService.atualizar(republica);
-        return ResponseEntity.ok(republica);
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(
-            summary = "Excluir república",
-            description = "Remove um república do banco de dados utilizando seu ID"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "República excluído com sucesso"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "República não encontrado",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Erro interno do servidor"
-            )
-    })
-    public ResponseEntity deletar(@PathVariable Long id) {
-
-        this.republicaService.excluir(id);
-        return ResponseEntity.noContent().build();
+    public RepublicaResposta porId(@PathVariable Long id) {
+        return republicas.porId(id);
     }
 
     @GetMapping("/uuid/{uuid}")
-    @Operation(
-            summary = "Buscar república por UUID",
-            description = "Busca um república cadastrado utilizando seu UUID"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "República encontrado com sucesso",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation =  Republica.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "República não encontrado",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Erro interno do servidor"
-            )
+    @Operation(summary = "Consultar república por UUID", description = "Consulta uma república da qual o usuário participa",
+            security = @SecurityRequirement(name = "basicAuth"))
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "República retornada",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = RepublicaResposta.class))),
+            @ApiResponse(responseCode = "400", description = "UUID inválido"),
+            @ApiResponse(responseCode = "401", description = "Autenticação necessária"),
+            @ApiResponse(responseCode = "403", description = "Participação ativa necessária"),
+            @ApiResponse(responseCode = "404", description = "República não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    public  Republica republicaUUID(@PathVariable String uuid) {
-        return this.republicaService.getRepublicaUUID(uuid);
+    public RepublicaResposta porUuid(@PathVariable UUID uuid) {
+        return republicas.porUuid(uuid);
     }
 
-    @PutMapping("/uuid")
-    @Transactional
-    @Operation(
-            summary = "Atualizar república por UUID",
-            description = "Atualiza os dados de um república utilizando seu UUID como identificador"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "República atualizado com sucesso"
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Requisição inválida",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "República não encontrado",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Erro interno do servidor"
-            )
+    @PostMapping
+    @Operation(summary = "Criar república", description = "Cria uma república e a participação do fundador como administrador",
+            security = @SecurityRequirement(name = "basicAuth"))
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "República criada",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = RepublicaResposta.class))),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "401", description = "Autenticação necessária"),
+            @ApiResponse(responseCode = "409", description = "Usuário já participa de uma república ativa"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    public ResponseEntity atualizarUUID(@RequestBody  Republica republica) {
+    public ResponseEntity<RepublicaResposta> cadastrar(@RequestBody @Valid RepublicaDados dados,
+                                                         UriComponentsBuilder uriBuilder) {
+        RepublicaResposta republica = republicas.cadastrar(dados);
+        URI uri = uriBuilder.path("/republica/uuid/{uuid}").buildAndExpand(republica.uuid()).toUri();
+        return ResponseEntity.created(uri).body(republica);
+    }
 
-        this.republicaService.atualizarUUID(republica);
-        return ResponseEntity.ok(republica);
+    @PutMapping("/{id}")
+    @Operation(summary = "Atualizar república por ID", description = "Atualiza os dados de uma república administrada pelo usuário",
+            security = @SecurityRequirement(name = "basicAuth"))
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "República atualizada",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = RepublicaResposta.class))),
+            @ApiResponse(responseCode = "400", description = "Dados ou ID inválidos"),
+            @ApiResponse(responseCode = "401", description = "Autenticação necessária"),
+            @ApiResponse(responseCode = "403", description = "Permissão de administrador necessária"),
+            @ApiResponse(responseCode = "404", description = "República não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    public RepublicaResposta atualizar(@PathVariable Long id, @RequestBody @Valid RepublicaDados dados) {
+        return republicas.atualizar(id, dados);
+    }
+
+    @PutMapping("/uuid/{uuid}")
+    @Operation(summary = "Atualizar república por UUID", description = "Atualiza os dados de uma república administrada pelo usuário",
+            security = @SecurityRequirement(name = "basicAuth"))
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "República atualizada",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = RepublicaResposta.class))),
+            @ApiResponse(responseCode = "400", description = "Dados ou UUID inválidos"),
+            @ApiResponse(responseCode = "401", description = "Autenticação necessária"),
+            @ApiResponse(responseCode = "403", description = "Permissão de administrador necessária"),
+            @ApiResponse(responseCode = "404", description = "República não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    public RepublicaResposta atualizarUuid(@PathVariable UUID uuid, @RequestBody @Valid RepublicaDados dados) {
+        return republicas.atualizar(uuid, dados);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Encerrar república", description = "Desativa a república e encerra suas participações ativas",
+            security = @SecurityRequirement(name = "basicAuth"))
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "República encerrada", content = @Content),
+            @ApiResponse(responseCode = "400", description = "ID inválido"),
+            @ApiResponse(responseCode = "401", description = "Autenticação necessária"),
+            @ApiResponse(responseCode = "403", description = "Permissão de administrador necessária"),
+            @ApiResponse(responseCode = "404", description = "República não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    public ResponseEntity<Void> encerrar(@PathVariable Long id) {
+        republicas.encerrar(id);
+        return ResponseEntity.noContent().build();
     }
 }

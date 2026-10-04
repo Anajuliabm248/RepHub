@@ -24,6 +24,7 @@ import java.util.UUID;
 @Schema(description = "Representa uma tarefa doméstica em uma república")
 public class TarefaDomestica {
     @UuidGenerator
+    @Column(nullable = false, unique = true, updatable = false)
     @Schema(description = "UUID da tarefa de uma república", example = "123e4567-e89b-12d3-a456-426614174000")
     private UUID uuid;
 
@@ -38,6 +39,7 @@ public class TarefaDomestica {
     private Republica republica;
 
     @NotBlank
+    @Column(nullable = false)
     @Schema(description = "Título de uma tarefa", example = "Banheiro")
     private String titulo;
 

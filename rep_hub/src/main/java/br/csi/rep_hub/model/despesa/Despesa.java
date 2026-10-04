@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +33,7 @@ public class Despesa {
     private Long id;
 
     @UuidGenerator
+    @Column(nullable = false, unique = true, updatable = false)
     @Schema(description = "UUID da despesa de uma república")
     private  UUID uuid;
 
@@ -40,6 +43,7 @@ public class Despesa {
     private Republica republica;
 
     @NotBlank
+    @Column(nullable = false)
     @Schema(description = "Título de uma despesa", example = "Internet")
     private String titulo;
 
@@ -47,6 +51,9 @@ public class Despesa {
     private String descricao;
 
     @NotNull
+    @DecimalMin("1.00")
+    @Digits(integer = 10, fraction = 2)
+    @Column(nullable = false, precision = 12, scale = 2)
     @Schema(description = "Valor total de uma despesa")
     private BigDecimal valorTotal;
 
@@ -74,7 +81,7 @@ public class Despesa {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    @Column(name = "tipoDivisao")
+    @Column(name = "tipo_divisao", nullable = false)
     @Schema(description = "Tipo de divisão de uma despesa")
     private TipoDivisao tipoDivisao;
 }

@@ -29,6 +29,7 @@ public class Aviso {
     private Long id;
 
     @UuidGenerator
+    @Column(nullable = false, unique = true, updatable = false)
     @Schema(description = "UUID de aviso de uma república")
     private UUID uuid;
 
@@ -38,10 +39,12 @@ public class Aviso {
     private Republica republica;
 
     @NotBlank
+    @Column(nullable = false)
     @Schema(description = "Título de um aviso", example = "Mercado")
     private String titulo;
 
     @NotBlank
+    @Column(nullable = false)
     @Schema(description = "Mensagem do aviso", example = "Comprar pão")
     private String mensagem;
 
