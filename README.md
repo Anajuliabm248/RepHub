@@ -17,7 +17,6 @@ Uma única aplicação Spring Boot, com API REST e banco PostgreSQL, organizada 
 | DTO | Dados recebidos e apresentados pela API, sem expor credenciais |
 | Controller | Entrada e resposta HTTP, delegando os casos de uso aos services |
 
-
 O [diagrama de classes revisado](Docs/diagrama_classes_melhorado.png) contém atributos, operações, associações, enumerações, services e DTOs.
 
 ## 1. Usuários e contas
@@ -37,7 +36,7 @@ O [diagrama de classes revisado](Docs/diagrama_classes_melhorado.png) contém at
 ### Vínculo e papéis
 
 - República tem nome obrigatório, descrição opcional e pode ter o mesmo nome de outra república.
-- Criar uma república cria também a participação `ADMIN` do fundador, em uma única transação.
+- Criar uma república cria também a participação `ADMINISTRADOR` do fundador, em uma única transação.
 - Cada participação liga um usuário a uma república, com papel, situação, entrada e saída. Um usuário pode ter várias participações históricas, mas **no máximo uma ativa**.
 - Ingresso por convite cria participação `MORADOR`.
 - Cada retorno, inclusive à mesma república, cria uma nova participação. Participações encerradas nunca são reativadas.
@@ -119,7 +118,7 @@ O [diagrama de classes revisado](Docs/diagrama_classes_melhorado.png) contém at
 - Qualquer participante ativo cadastra despesas e consulta despesas e parcelas da própria república.
 - `Despesa` representa o gasto coletivo. `ParcelaDespesa` é a parte devida por uma participação, não um parcelamento mensal.
 - Despesa nasce junto com a divisão e pelo menos uma parcela incluída. Tudo é salvo na mesma transação.
-- Título, categoria, referência, valor total e tipo de divisão obrigatórios. Descrição e vencimento opcionais.
+- Título, categoria, referência, vencimento, valor total e tipo de divisão obrigatórios. Descrição opcional.
 - Referência futura não é aceita. Vencimento pode ser anterior à referência. Criação é definida pelo sistema.
 - Categorias: aluguel, água, energia, internet, mercado, limpeza, manutenção, lazer e outros.
 - Criador pode ficar fora do rateio. Novas parcelas exigem participações ativas da mesma república.

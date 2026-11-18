@@ -1,16 +1,17 @@
-package br.csi.rep_hub.controller.dto;
+package br.csi.rep_hub.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record UsuarioAtualizacao(
+public record UsuarioCadastro(
         @NotBlank
         String nome,
 
-        @NotBlank @Email
+        @NotBlank
+        @Email
         String email,
 
-        @Size(min = 8) String
-        senha
+        @NotBlank @Size(min = 8)
+        String senha
 ) {}

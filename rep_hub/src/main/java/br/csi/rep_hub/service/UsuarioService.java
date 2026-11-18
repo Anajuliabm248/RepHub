@@ -1,8 +1,8 @@
 package br.csi.rep_hub.service;
 
-import br.csi.rep_hub.controller.dto.UsuarioAtualizacao;
-import br.csi.rep_hub.controller.dto.UsuarioCadastro;
-import br.csi.rep_hub.controller.dto.UsuarioResposta;
+import br.csi.rep_hub.dto.UsuarioAtualizacao;
+import br.csi.rep_hub.dto.UsuarioCadastro;
+import br.csi.rep_hub.dto.UsuarioResposta;
 import br.csi.rep_hub.infra.UsuarioAtual;
 import br.csi.rep_hub.model.participacao.PapelRepublica;
 import br.csi.rep_hub.model.participacao.ParticipacaoRepublica;

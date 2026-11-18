@@ -1,7 +1,7 @@
 package br.csi.rep_hub.controller;
 
-import br.csi.rep_hub.controller.dto.ParticipacaoPapel;
-import br.csi.rep_hub.controller.dto.ParticipacaoResposta;
+import br.csi.rep_hub.dto.ParticipacaoPapel;
+import br.csi.rep_hub.dto.ParticipacaoResposta;
 import br.csi.rep_hub.service.ParticipacaoRepublicaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -30,7 +30,7 @@ public class ParticipacaoRepublicaController {
 
     @GetMapping("/listar")
     @Operation(summary = "Listar participações", description = "Retorna as participações ativas da república do usuário",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista retornada, possivelmente vazia",
                     content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ParticipacaoResposta.class)))),
@@ -43,7 +43,7 @@ public class ParticipacaoRepublicaController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Consultar participação por ID", description = "Consulta uma participação da própria república",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Participação retornada",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ParticipacaoResposta.class))),
@@ -59,7 +59,7 @@ public class ParticipacaoRepublicaController {
 
     @GetMapping("/uuid/{uuid}")
     @Operation(summary = "Consultar participação por UUID", description = "Consulta uma participação da própria república",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Participação retornada",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ParticipacaoResposta.class))),
@@ -75,7 +75,7 @@ public class ParticipacaoRepublicaController {
 
     @PutMapping("/{id}/papel")
     @Operation(summary = "Alterar papel por ID", description = "Altera o papel de um participante ativo; exige administração",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Papel alterado",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ParticipacaoResposta.class))),
@@ -92,7 +92,7 @@ public class ParticipacaoRepublicaController {
 
     @PutMapping("/uuid/{uuid}/papel")
     @Operation(summary = "Alterar papel por UUID", description = "Altera o papel de um participante ativo; exige administração",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Papel alterado",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ParticipacaoResposta.class))),
@@ -110,7 +110,7 @@ public class ParticipacaoRepublicaController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Encerrar participação", description = "Registra a saída do titular ou a remoção por administrador",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Participação encerrada", content = @Content),
             @ApiResponse(responseCode = "400", description = "ID inválido"),

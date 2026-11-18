@@ -1,7 +1,7 @@
 package br.csi.rep_hub.service;
 
-import br.csi.rep_hub.controller.dto.ParticipacaoPapel;
-import br.csi.rep_hub.controller.dto.ParticipacaoResposta;
+import br.csi.rep_hub.dto.ParticipacaoPapel;
+import br.csi.rep_hub.dto.ParticipacaoResposta;
 import br.csi.rep_hub.infra.AcessoRepublica;
 import br.csi.rep_hub.infra.UsuarioAtual;
 import br.csi.rep_hub.model.participacao.PapelRepublica;

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ParticipacaoRepublicaRepository extends JpaRepository<ParticipacaoRepublica, Long> {
-    public ParticipacaoRepublica findParticipacaoRepublicasByUuid(UUID uuid);
+    ParticipacaoRepublica findParticipacaoRepublicasByUuid(UUID uuid);
     List<ParticipacaoRepublica> findByUsuarioIdAndStatus(Long usuarioId, StatusParticipacao status);
     List<ParticipacaoRepublica> findByRepublicaIdAndStatus(Long republicaId, StatusParticipacao status);
     Optional<ParticipacaoRepublica> findByRepublicaIdAndUsuarioIdAndStatus(

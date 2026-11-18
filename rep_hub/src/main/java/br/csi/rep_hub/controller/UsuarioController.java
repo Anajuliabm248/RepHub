@@ -1,8 +1,8 @@
 package br.csi.rep_hub.controller;
 
-import br.csi.rep_hub.controller.dto.UsuarioAtualizacao;
-import br.csi.rep_hub.controller.dto.UsuarioCadastro;
-import br.csi.rep_hub.controller.dto.UsuarioResposta;
+import br.csi.rep_hub.dto.UsuarioAtualizacao;
+import br.csi.rep_hub.dto.UsuarioCadastro;
+import br.csi.rep_hub.dto.UsuarioResposta;
 import br.csi.rep_hub.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -47,7 +47,7 @@ public class UsuarioController {
 
     @GetMapping("/me")
     @Operation(summary = "Consultar minha conta", description = "Retorna os dados da conta autenticada",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Conta retornada",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResposta.class))),
@@ -60,7 +60,7 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Consultar usuário por ID", description = "Consulta a própria conta pelo ID interno",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Usuário retornado",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResposta.class))),
@@ -76,7 +76,7 @@ public class UsuarioController {
 
     @GetMapping("/uuid/{uuid}")
     @Operation(summary = "Consultar usuário por UUID", description = "Consulta a própria conta pelo UUID",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Usuário retornado",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResposta.class))),
@@ -92,7 +92,7 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar usuário por ID", description = "Atualiza os dados da própria conta",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Usuário atualizado",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResposta.class))),
@@ -109,7 +109,7 @@ public class UsuarioController {
 
     @PutMapping("/uuid/{uuid}")
     @Operation(summary = "Atualizar usuário por UUID", description = "Atualiza os dados da própria conta",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Usuário atualizado",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResposta.class))),
@@ -126,7 +126,7 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Desativar usuário por ID", description = "Desativa a própria conta sem excluir o registro",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Conta desativada", content = @Content),
             @ApiResponse(responseCode = "400", description = "ID inválido"),
@@ -143,7 +143,7 @@ public class UsuarioController {
 
     @DeleteMapping("/uuid/{uuid}")
     @Operation(summary = "Desativar usuário por UUID", description = "Desativa a própria conta sem excluir o registro",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Conta desativada", content = @Content),
             @ApiResponse(responseCode = "400", description = "UUID inválido"),

@@ -1,7 +1,7 @@
 package br.csi.rep_hub.controller;
 
-import br.csi.rep_hub.controller.dto.RepublicaDados;
-import br.csi.rep_hub.controller.dto.RepublicaResposta;
+import br.csi.rep_hub.dto.RepublicaDados;
+import br.csi.rep_hub.dto.RepublicaResposta;
 import br.csi.rep_hub.service.RepublicaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -32,7 +32,7 @@ public class RepublicaController {
 
     @GetMapping("/listar")
     @Operation(summary = "Listar minhas repúblicas", description = "Retorna as repúblicas ativas das quais o usuário participa",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista retornada, possivelmente vazia",
                     content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RepublicaResposta.class)))),
@@ -45,7 +45,7 @@ public class RepublicaController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Consultar república por ID", description = "Consulta uma república da qual o usuário participa",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "República retornada",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = RepublicaResposta.class))),
@@ -61,7 +61,7 @@ public class RepublicaController {
 
     @GetMapping("/uuid/{uuid}")
     @Operation(summary = "Consultar república por UUID", description = "Consulta uma república da qual o usuário participa",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "República retornada",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = RepublicaResposta.class))),
@@ -77,7 +77,7 @@ public class RepublicaController {
 
     @PostMapping
     @Operation(summary = "Criar república", description = "Cria uma república e a participação do fundador como administrador",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "República criada",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = RepublicaResposta.class))),
@@ -95,7 +95,7 @@ public class RepublicaController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar república por ID", description = "Atualiza os dados de uma república administrada pelo usuário",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "República atualizada",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = RepublicaResposta.class))),
@@ -111,7 +111,7 @@ public class RepublicaController {
 
     @PutMapping("/uuid/{uuid}")
     @Operation(summary = "Atualizar república por UUID", description = "Atualiza os dados de uma república administrada pelo usuário",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "República atualizada",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = RepublicaResposta.class))),
@@ -127,7 +127,7 @@ public class RepublicaController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Encerrar república", description = "Desativa a república e encerra suas participações ativas",
-            security = @SecurityRequirement(name = "basicAuth"))
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "República encerrada", content = @Content),
             @ApiResponse(responseCode = "400", description = "ID inválido"),
