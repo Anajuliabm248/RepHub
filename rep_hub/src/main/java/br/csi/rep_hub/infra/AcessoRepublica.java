@@ -30,10 +30,12 @@ public class AcessoRepublica {
                 .orElseThrow(() -> new AccessDeniedException("Participação ativa necessária"));
     }
 
-    // grante que o participante ativo também é administrador
-    public void exigirAdministrador(Republica republica) {
-        if (exigirParticipante(republica).getPapel() != PapelRepublica.ADMINISTRADOR) {
+    // garante que o participante ativo também é administrador
+    public ParticipacaoRepublica exigirAdministrador(Republica republica) {
+        ParticipacaoRepublica participacao = exigirParticipante(republica);
+        if (participacao.getPapel() != PapelRepublica.ADMINISTRADOR) {
             throw new AccessDeniedException("Ação restrita a administradores da república");
         }
+        return participacao;
     }
 }

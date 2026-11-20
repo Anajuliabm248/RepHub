@@ -10,6 +10,8 @@ import br.csi.rep_hub.model.participacao.ParticipacaoRepublicaRepository;
 import br.csi.rep_hub.model.participacao.StatusParticipacao;
 import br.csi.rep_hub.model.republica.Republica;
 import br.csi.rep_hub.model.republica.RepublicaRepository;
+import br.csi.rep_hub.model.usuario.Usuario;
+import br.csi.rep_hub.model.usuario.UsuarioRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,20 +25,31 @@ import java.util.UUID;
 public class RepublicaService {
     private final RepublicaRepository republicas;
     private final ParticipacaoRepublicaRepository participacoes;
+    private final UsuarioRepository usuarios;
     private final UsuarioAtual usuarioAtual;
     private final AcessoRepublica acesso;
+    private final ConviteService convites;
+    private final AtribuicaoTarefaService atribuicoes;
 
     public RepublicaService(RepublicaRepository republicas, ParticipacaoRepublicaRepository participacoes,
-                            UsuarioAtual usuarioAtual, AcessoRepublica acesso) {
+                            UsuarioRepository usuarios, UsuarioAtual usuarioAtual, AcessoRepublica acesso,
+                            ConviteService convites, AtribuicaoTarefaService atribuicoes) {
         this.republicas = republicas;
         this.participacoes = participacoes;
+        this.usuarios = usuarios;
         this.usuarioAtual = usuarioAtual;
         this.acesso = acesso;
+        this.convites = convites;
+        this.atribuicoes = atribuicoes;
     }
 
     @Transactional
     public RepublicaResposta cadastrar(RepublicaDados dados) {
-        if (!participacoes.findByUsuarioIdAndStatus(usuarioAtual.obter().getId(), StatusParticipacao.ATIVO).isEmpty()) {
+        Usuario usuario = usuarioAtual.obter();
+        Usuario usuarioFundador = usuarios.bloquearPorId(usuario.getId()).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+        if (!participacoes.findByUsuarioIdAndStatus(
+                usuarioFundador.getId(), StatusParticipacao.ATIVO).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "O usuário já participa de uma república ativa");
         }
         Republica republica = new Republica();
@@ -45,12 +58,12 @@ public class RepublicaService {
         republica.setAtiva(true);
         republica = republicas.saveAndFlush(republica);
 
-        ParticipacaoRepublica fundador = new ParticipacaoRepublica();
-        fundador.setRepublica(republica);
-        fundador.setUsuario(usuarioAtual.obter());
-        fundador.setPapel(PapelRepublica.ADMINISTRADOR);
-        fundador.setStatus(StatusParticipacao.ATIVO);
-        participacoes.saveAndFlush(fundador);
+        ParticipacaoRepublica participacaoFundador = new ParticipacaoRepublica();
+        participacaoFundador.setRepublica(republica);
+        participacaoFundador.setUsuario(usuarioFundador);
+        participacaoFundador.setPapel(PapelRepublica.ADMINISTRADOR);
+        participacaoFundador.setStatus(StatusParticipacao.ATIVO);
+        participacoes.saveAndFlush(participacaoFundador);
         return RepublicaResposta.de(republica);
     }
 
@@ -77,25 +90,30 @@ public class RepublicaService {
 
     @Transactional
     public RepublicaResposta atualizar(Long id, RepublicaDados dados) {
-        Republica republica = buscar(id);
+        Republica republica = buscarParaAtualizacao(id);
         acesso.exigirAdministrador(republica);
         return aplicarAtualizacao(republica, dados);
     }
 
     @Transactional
     public RepublicaResposta atualizar(UUID uuid, RepublicaDados dados) {
-        Republica republica = buscar(uuid);
+        Republica republica = buscarParaAtualizacao(uuid);
         acesso.exigirAdministrador(republica);
         return aplicarAtualizacao(republica, dados);
     }
 
     @Transactional
     public void encerrar(Long id) {
-        Republica republica = buscar(id);
-        acesso.exigirAdministrador(republica);
+        Republica republica = buscarParaAtualizacao(id);
+        List<ParticipacaoRepublica> participacoesAtivas = participacoes.bloquearParticipacoesAtivas(
+                republica.getId(), StatusParticipacao.ATIVO);
+        ParticipacaoRepublica administrador = acesso.exigirAdministrador(republica);
         Instant agora = Instant.now();
-        for (ParticipacaoRepublica participacao : participacoes.findByRepublicaIdAndStatus(
-                republica.getId(), StatusParticipacao.ATIVO)) {
+
+        convites.cancelarUtilizaveisDaRepublica(republica, administrador, agora);
+        atribuicoes.cancelarPendentesDaRepublica(republica, administrador, agora);
+
+        for (ParticipacaoRepublica participacao : participacoesAtivas) {
             participacao.setStatus(StatusParticipacao.INATIVO);
             participacao.setDataSaida(agora);
         }
@@ -115,6 +133,16 @@ public class RepublicaService {
 
     private Republica buscar(UUID uuid) {
         return java.util.Optional.ofNullable(republicas.findRepublicaByUuid(uuid)).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "República não encontrada"));
+    }
+
+    private Republica buscarParaAtualizacao(Long id) {
+        return republicas.bloquearPorId(id).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "República não encontrada"));
+    }
+
+    private Republica buscarParaAtualizacao(UUID uuid) {
+        return republicas.bloquearPorUuid(uuid).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "República não encontrada"));
     }
 }

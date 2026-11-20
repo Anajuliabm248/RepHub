@@ -3,9 +3,14 @@ package br.csi.rep_hub.service;
 import br.csi.rep_hub.model.convite.Convite;
 import br.csi.rep_hub.model.convite.ConviteRepository;
 import br.csi.rep_hub.model.convite.CriarCodigoConvite;
+import br.csi.rep_hub.model.convite.StatusConvite;
+import br.csi.rep_hub.model.participacao.ParticipacaoRepublica;
+import br.csi.rep_hub.model.republica.Republica;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
 
 @Service
 public class ConviteService {
@@ -36,6 +41,19 @@ public class ConviteService {
         }
 
         throw new IllegalStateException("Não foi possível gerar um código de convite único", ultimaColisao);
+    }
+
+    public void cancelarUtilizaveisDaRepublica(Republica republica,
+                                                ParticipacaoRepublica autor,
+                                                Instant dataCancelamento) {
+        repository.bloquearPorRepublicaEStatus(republica.getId(), StatusConvite.DISPONIVEL).stream()
+                .filter(convite -> convite.getDataExpiracao() != null)
+                .filter(convite -> dataCancelamento.isBefore(convite.getDataExpiracao()))
+                .forEach(convite -> {
+                    convite.setStatus(StatusConvite.CANCELADO);
+                    convite.setDataCancelamento(dataCancelamento);
+                    convite.setCanceladoPor(autor);
+                });
     }
 
     private boolean codigoDuplicado(Throwable erro) {

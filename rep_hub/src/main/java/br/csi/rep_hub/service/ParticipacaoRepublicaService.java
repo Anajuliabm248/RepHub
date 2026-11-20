@@ -24,12 +24,15 @@ public class ParticipacaoRepublicaService {
     private final ParticipacaoRepublicaRepository participacoes;
     private final UsuarioAtual usuarioAtual;
     private final AcessoRepublica acesso;
+    private final AtribuicaoTarefaService atribuicoes;
 
     public ParticipacaoRepublicaService(ParticipacaoRepublicaRepository participacoes,
-                                        UsuarioAtual usuarioAtual, AcessoRepublica acesso) {
+                                        UsuarioAtual usuarioAtual, AcessoRepublica acesso,
+                                        AtribuicaoTarefaService atribuicoes) {
         this.participacoes = participacoes;
         this.usuarioAtual = usuarioAtual;
         this.acesso = acesso;
+        this.atribuicoes = atribuicoes;
     }
 
     @Transactional(readOnly = true)
@@ -80,8 +83,10 @@ public class ParticipacaoRepublicaService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Participação já encerrada");
         }
         exigirOutroAdministradorSeNecessario(participacao);
+        Instant agora = Instant.now();
+        atribuicoes.cancelarPendentesDaParticipacao(participacao, ator, agora);
         participacao.setStatus(StatusParticipacao.INATIVO);
-        participacao.setDataSaida(Instant.now());
+        participacao.setDataSaida(agora);
     }
 
     private ParticipacaoResposta alterarPapel(ParticipacaoRepublica participacao, ParticipacaoPapel dados) {

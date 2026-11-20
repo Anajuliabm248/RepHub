@@ -1,5 +1,7 @@
 package br.csi.rep_hub.model.convite;
 
+import br.csi.rep_hub.model.participacao.ParticipacaoRepublica;
+import br.csi.rep_hub.model.republica.Republica;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -36,6 +38,10 @@ public class Convite {
     @Column(name = "codigo", unique = true, nullable = false)
     private String codigo;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "republica_id")
+    private Republica republica;
+
     @Schema(description = "Data de criação do convite")
     @CreationTimestamp
     private Instant dataCriacao;
@@ -45,6 +51,10 @@ public class Convite {
 
     @Schema(description = "Data de cancelamento do convite")
     private Instant dataCancelamento;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cancelado_por_participacao_id")
+    private ParticipacaoRepublica canceladoPor;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

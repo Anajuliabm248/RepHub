@@ -126,7 +126,8 @@ public class RepublicaController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Encerrar república", description = "Desativa a república e encerra suas participações ativas",
+    @Operation(summary = "Encerrar república", description = "Desativa a república, encerra suas participações e " +
+            "cancela convites utilizáveis e atribuições pendentes, preservando o histórico",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "República encerrada", content = @Content),

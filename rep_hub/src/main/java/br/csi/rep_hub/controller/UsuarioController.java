@@ -125,7 +125,8 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Desativar usuário por ID", description = "Desativa a própria conta sem excluir o registro",
+    @Operation(summary = "Desativar usuário por ID", description = "Desativa a própria conta, encerra sua participação " +
+            "ativa e cancela atribuições pendentes, sem excluir registros",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Conta desativada", content = @Content),
@@ -142,7 +143,8 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/uuid/{uuid}")
-    @Operation(summary = "Desativar usuário por UUID", description = "Desativa a própria conta sem excluir o registro",
+    @Operation(summary = "Desativar usuário por UUID", description = "Desativa a própria conta, encerra sua participação " +
+            "ativa e cancela atribuições pendentes, sem excluir registros",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Conta desativada", content = @Content),

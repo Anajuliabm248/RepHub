@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -26,13 +27,16 @@ public class UsuarioService {
     private final ParticipacaoRepublicaRepository participacoes;
     private final PasswordEncoder senhas;
     private final UsuarioAtual usuarioAtual;
+    private final AtribuicaoTarefaService atribuicoes;
 
     public UsuarioService(UsuarioRepository usuarios, ParticipacaoRepublicaRepository participacoes,
-                          PasswordEncoder senhas, UsuarioAtual usuarioAtual) {
+                          PasswordEncoder senhas, UsuarioAtual usuarioAtual,
+                          AtribuicaoTarefaService atribuicoes) {
         this.usuarios = usuarios;
         this.participacoes = participacoes;
         this.senhas = senhas;
         this.usuarioAtual = usuarioAtual;
+        this.atribuicoes = atribuicoes;
     }
 
     @Transactional
@@ -110,8 +114,13 @@ public class UsuarioService {
     }
 
     private void desativar(Usuario usuario) {
-        for (ParticipacaoRepublica participacao : participacoes.findByUsuarioIdAndStatus(
-                usuario.getId(), StatusParticipacao.ATIVO)) {
+        Usuario usuarioBloqueado = usuarios.bloquearPorId(usuario.getId()).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+        List<ParticipacaoRepublica> participacoesAtivas =
+                participacoes.bloquearParticipacoesAtivasDoUsuario(
+                        usuarioBloqueado.getId(), StatusParticipacao.ATIVO);
+
+        for (ParticipacaoRepublica participacao : participacoesAtivas) {
             if (participacao.getPapel() == PapelRepublica.ADMINISTRADOR
                     && participacao.getRepublica().isAtiva()) {
                 Long republicaId = participacao.getRepublica().getId();
@@ -122,10 +131,15 @@ public class UsuarioService {
                             "Transfira a administração antes de desativar a conta");
                 }
             }
-            participacao.setStatus(StatusParticipacao.INATIVO);
-            participacao.setDataSaida(Instant.now());
         }
-        usuario.setAtivo(false);
+
+        Instant agora = Instant.now();
+        for (ParticipacaoRepublica participacao : participacoesAtivas) {
+            atribuicoes.cancelarPendentesDaParticipacao(participacao, participacao, agora);
+            participacao.setStatus(StatusParticipacao.INATIVO);
+            participacao.setDataSaida(agora);
+        }
+        usuarioBloqueado.setAtivo(false);
     }
 
     private Usuario buscar(Long id) {

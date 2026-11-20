@@ -24,4 +24,10 @@ public interface ParticipacaoRepublicaRepository extends JpaRepository<Participa
             "and p.status = :status order by p.id")
     List<ParticipacaoRepublica> bloquearParticipacoesAtivas(@Param("republicaId") Long republicaId,
                                                               @Param("status") StatusParticipacao status);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select p from ParticipacaoRepublica p where p.usuario.id = :usuarioId " +
+            "and p.status = :status order by p.id")
+    List<ParticipacaoRepublica> bloquearParticipacoesAtivasDoUsuario(
+            @Param("usuarioId") Long usuarioId, @Param("status") StatusParticipacao status);
 }
