@@ -2,6 +2,7 @@ package br.csi.rep_hub.model.convite;
 
 import br.csi.rep_hub.model.participacao.ParticipacaoRepublica;
 import br.csi.rep_hub.model.republica.Republica;
+import br.csi.rep_hub.model.usuario.Usuario;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -10,7 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.Instant;
@@ -38,16 +38,32 @@ public class Convite {
     @Column(name = "codigo", unique = true, nullable = false)
     private String codigo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "republica_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "republica_id", nullable = false, updatable = false)
     private Republica republica;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "emissor_participacao_id", nullable = false, updatable = false)
+    private ParticipacaoRepublica emissor;
+
     @Schema(description = "Data de criação do convite")
-    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private Instant dataCriacao;
 
     @Schema(description = "Data de expiração do convite")
+    @Column(nullable = false, updatable = false)
     private Instant dataExpiracao;
+
+    @Schema(description = "Data em que o convite foi utilizado")
+    private Instant dataUtilizacao;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "utilizado_por_usuario_id")
+    private Usuario utilizadoPor;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "participacao_criada_id", unique = true)
+    private ParticipacaoRepublica participacaoCriada;
 
     @Schema(description = "Data de cancelamento do convite")
     private Instant dataCancelamento;
@@ -57,7 +73,7 @@ public class Convite {
     private ParticipacaoRepublica canceladoPor;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     @NotNull
     @Schema(description = "Status do convite")
     private StatusConvite status;
