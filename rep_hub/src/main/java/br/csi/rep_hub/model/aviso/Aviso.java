@@ -1,5 +1,6 @@
 package br.csi.rep_hub.model.aviso;
 
+import br.csi.rep_hub.model.participacao.ParticipacaoRepublica;
 import br.csi.rep_hub.model.republica.Republica;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -34,9 +35,14 @@ public class Aviso {
     private UUID uuid;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "republica_id", nullable = false)
+    @JoinColumn(name = "republica_id", nullable = false, updatable = false)
     @Schema(description = "República à qual o aviso pertence")
     private Republica republica;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "autor_participacao_id", nullable = false, updatable = false)
+    @Schema(description = "Participação autora do aviso")
+    private ParticipacaoRepublica autor;
 
     @NotBlank
     @Column(nullable = false)
@@ -50,12 +56,18 @@ public class Aviso {
 
     @NotNull
     @CreationTimestamp
-    @Schema(description = "data de publicacao do aviso")
+    @Column(nullable = false, updatable = false)
+    @Schema(description = "Data de publicação do aviso")
     private Instant dataPublicacao;
 
-    @Schema(description = "data de edição do aviso")
+    @Schema(description = "Data da última edição do aviso")
     private Instant dataEdicao;
 
-    @Schema(description = "data de remoção do aviso")
+    @Schema(description = "Data em que o aviso foi ocultado")
     private Instant dataRemocao;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ocultado_por_participacao_id")
+    @Schema(description = "Participação que ocultou o aviso")
+    private ParticipacaoRepublica ocultadoPor;
 }
