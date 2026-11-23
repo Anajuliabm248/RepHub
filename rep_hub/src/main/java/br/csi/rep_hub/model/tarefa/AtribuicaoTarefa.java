@@ -1,6 +1,7 @@
 package br.csi.rep_hub.model.tarefa;
 
 import br.csi.rep_hub.model.participacao.ParticipacaoRepublica;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,6 +29,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "Representa a responsabilidade individual por uma tarefa")
 public class AtribuicaoTarefa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,4 +65,22 @@ public class AtribuicaoTarefa {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "autor_cancelamento_id")
     private ParticipacaoRepublica autorCancelamento;
+
+    // as mudanças de estado ficam na própria entidade para manter suas datas coerentes
+    public void concluir(Instant dataConclusao) {
+        this.status = StatusAtribuicao.CONCLUIDA;
+        this.dataConclusao = dataConclusao;
+    }
+
+    public void reabrir() {
+        this.status = StatusAtribuicao.PENDENTE;
+        this.dataConclusao = null;
+    }
+
+    public void cancelar(ParticipacaoRepublica autor, Instant dataCancelamento) {
+        this.status = StatusAtribuicao.CANCELADA;
+        this.dataConclusao = null;
+        this.dataCancelamento = dataCancelamento;
+        this.autorCancelamento = autor;
+    }
 }

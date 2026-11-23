@@ -1,6 +1,7 @@
 package br.csi.rep_hub.model.tarefa;
 
 import br.csi.rep_hub.model.republica.Republica;
+import br.csi.rep_hub.model.participacao.ParticipacaoRepublica;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -38,6 +39,11 @@ public class TarefaDomestica {
     @Schema(description = "República à qual a tarefa pertence")
     private Republica republica;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "criador_participacao_id", nullable = false, updatable = false)
+    @Schema(description = "Participação que criou a tarefa")
+    private ParticipacaoRepublica criador;
+
     @NotBlank
     @Column(nullable = false)
     @Schema(description = "Título de uma tarefa", example = "Banheiro")
@@ -56,4 +62,9 @@ public class TarefaDomestica {
 
     @Schema(description = "Data de cancelamento de uma tarefa")
     private Instant dataCancelamento;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "autor_cancelamento_id")
+    @Schema(description = "Participação que cancelou a tarefa")
+    private ParticipacaoRepublica autorCancelamento;
 }
