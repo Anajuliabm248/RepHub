@@ -1,4 +1,4 @@
-package br.csi.rep_hub.dto;
+package br.csi.rep_hub.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

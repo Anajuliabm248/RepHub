@@ -1,7 +1,7 @@
 package br.csi.rep_hub.controller;
 
-import br.csi.rep_hub.dto.AtribuicaoTarefaDados;
-import br.csi.rep_hub.dto.AtribuicaoTarefaResposta;
+import br.csi.rep_hub.dto.tarefas.AtribuicaoTarefaDados;
+import br.csi.rep_hub.dto.tarefas.AtribuicaoTarefaResposta;
 import br.csi.rep_hub.service.AtribuicaoTarefaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -1,4 +1,4 @@
-package br.csi.rep_hub.dto;
+package br.csi.rep_hub.dto.avisos;
 
 import br.csi.rep_hub.model.aviso.Aviso;
 

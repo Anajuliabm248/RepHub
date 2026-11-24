@@ -1,4 +1,4 @@
-package br.csi.rep_hub.dto;
+package br.csi.rep_hub.dto.avisos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

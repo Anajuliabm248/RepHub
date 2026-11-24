@@ -1,4 +1,4 @@
-package br.csi.rep_hub.dto;
+package br.csi.rep_hub.dto.participacao;
 
 import br.csi.rep_hub.model.participacao.PapelRepublica;
 import jakarta.validation.constraints.NotNull;

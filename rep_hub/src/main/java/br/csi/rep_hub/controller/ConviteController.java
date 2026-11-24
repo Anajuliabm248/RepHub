@@ -1,8 +1,8 @@
 package br.csi.rep_hub.controller;
 
-import br.csi.rep_hub.dto.ConsumirConviteDados;
-import br.csi.rep_hub.dto.ConviteResposta;
-import br.csi.rep_hub.dto.ParticipacaoResposta;
+import br.csi.rep_hub.dto.convite.ConsumirConviteDados;
+import br.csi.rep_hub.dto.convite.ConviteResposta;
+import br.csi.rep_hub.dto.participacao.ParticipacaoResposta;
 import br.csi.rep_hub.service.ConviteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

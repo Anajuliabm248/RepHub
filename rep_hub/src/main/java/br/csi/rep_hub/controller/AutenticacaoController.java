@@ -1,7 +1,7 @@
 package br.csi.rep_hub.controller;
 
-import br.csi.rep_hub.dto.LoginDados;
-import br.csi.rep_hub.dto.TokenResposta;
+import br.csi.rep_hub.dto.auth.LoginDados;
+import br.csi.rep_hub.dto.auth.TokenResposta;
 import br.csi.rep_hub.infra.security.TokenServiceJWT;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

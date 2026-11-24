@@ -1,7 +1,7 @@
 package br.csi.rep_hub.controller;
 
-import br.csi.rep_hub.dto.ParticipacaoPapel;
-import br.csi.rep_hub.dto.ParticipacaoResposta;
+import br.csi.rep_hub.dto.participacao.ParticipacaoPapel;
+import br.csi.rep_hub.dto.participacao.ParticipacaoResposta;
 import br.csi.rep_hub.service.ParticipacaoRepublicaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

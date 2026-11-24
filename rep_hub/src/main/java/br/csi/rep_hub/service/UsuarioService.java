@@ -1,8 +1,8 @@
 package br.csi.rep_hub.service;
 
-import br.csi.rep_hub.dto.UsuarioAtualizacao;
-import br.csi.rep_hub.dto.UsuarioCadastro;
-import br.csi.rep_hub.dto.UsuarioResposta;
+import br.csi.rep_hub.dto.auth.UsuarioAtualizacao;
+import br.csi.rep_hub.dto.auth.UsuarioCadastro;
+import br.csi.rep_hub.dto.auth.UsuarioResposta;
 import br.csi.rep_hub.infra.UsuarioAtual;
 import br.csi.rep_hub.model.participacao.PapelRepublica;
 import br.csi.rep_hub.model.participacao.ParticipacaoRepublica;
@@ -10,6 +10,8 @@ import br.csi.rep_hub.model.participacao.ParticipacaoRepublicaRepository;
 import br.csi.rep_hub.model.participacao.StatusParticipacao;
 import br.csi.rep_hub.model.usuario.Usuario;
 import br.csi.rep_hub.model.usuario.UsuarioRepository;
+import br.csi.rep_hub.model.despesa.ParcelaDespesaRepository;
+import br.csi.rep_hub.model.pagamento.PagamentoRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -28,15 +31,21 @@ public class UsuarioService {
     private final PasswordEncoder senhas;
     private final UsuarioAtual usuarioAtual;
     private final AtribuicaoTarefaService atribuicoes;
+    private final ParcelaDespesaRepository parcelas;
+    private final PagamentoRepository pagamentos;
 
     public UsuarioService(UsuarioRepository usuarios, ParticipacaoRepublicaRepository participacoes,
                           PasswordEncoder senhas, UsuarioAtual usuarioAtual,
-                          AtribuicaoTarefaService atribuicoes) {
+                          AtribuicaoTarefaService atribuicoes,
+                          ParcelaDespesaRepository parcelas,
+                          PagamentoRepository pagamentos) {
         this.usuarios = usuarios;
         this.participacoes = participacoes;
         this.senhas = senhas;
         this.usuarioAtual = usuarioAtual;
         this.atribuicoes = atribuicoes;
+        this.parcelas = parcelas;
+        this.pagamentos = pagamentos;
     }
 
     @Transactional
@@ -119,6 +128,21 @@ public class UsuarioService {
         List<ParticipacaoRepublica> participacoesAtivas =
                 participacoes.bloquearParticipacoesAtivasDoUsuario(
                         usuarioBloqueado.getId(), StatusParticipacao.ATIVO);
+
+        boolean parcelaEmAberto = parcelas
+                .findByParticipacao_Usuario_IdAndIncluidaTrueAndDespesa_DataCancelamentoIsNull(
+                        usuarioBloqueado.getId())
+                .stream()
+                .anyMatch(parcela -> {
+                    BigDecimal pago = pagamentos.somarConfirmados(parcela.getId());
+                    return parcela.getValor().compareTo(
+                            pago == null ? BigDecimal.ZERO : pago) > 0;
+                });
+        if (parcelaEmAberto
+                || pagamentos.contarPendentesDoUsuario(usuarioBloqueado.getId()) > 0) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Quite as parcelas e resolva os pagamentos pendentes antes de desativar a conta");
+        }
 
         for (ParticipacaoRepublica participacao : participacoesAtivas) {
             if (participacao.getPapel() == PapelRepublica.ADMINISTRADOR

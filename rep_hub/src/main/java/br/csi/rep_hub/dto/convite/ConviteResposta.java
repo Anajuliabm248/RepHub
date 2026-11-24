@@ -1,4 +1,4 @@
-package br.csi.rep_hub.dto;
+package br.csi.rep_hub.dto.convite;
 
 import br.csi.rep_hub.model.convite.Convite;
 import br.csi.rep_hub.model.convite.SituacaoConvite;

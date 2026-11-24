@@ -1,7 +1,7 @@
 package br.csi.rep_hub.controller;
 
-import br.csi.rep_hub.dto.AvisoDados;
-import br.csi.rep_hub.dto.AvisoResposta;
+import br.csi.rep_hub.dto.avisos.AvisoDados;
+import br.csi.rep_hub.dto.avisos.AvisoResposta;
 import br.csi.rep_hub.service.AvisoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -1,7 +1,7 @@
 package br.csi.rep_hub.controller;
 
-import br.csi.rep_hub.dto.RepublicaDados;
-import br.csi.rep_hub.dto.RepublicaResposta;
+import br.csi.rep_hub.dto.republica.RepublicaDados;
+import br.csi.rep_hub.dto.republica.RepublicaResposta;
 import br.csi.rep_hub.service.RepublicaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

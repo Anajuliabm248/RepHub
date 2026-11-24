@@ -1,7 +1,7 @@
 package br.csi.rep_hub.service;
 
-import br.csi.rep_hub.dto.TarefaDados;
-import br.csi.rep_hub.dto.TarefaResposta;
+import br.csi.rep_hub.dto.tarefas.TarefaDados;
+import br.csi.rep_hub.dto.tarefas.TarefaResposta;
 import br.csi.rep_hub.infra.AcessoRepublica;
 import br.csi.rep_hub.model.participacao.PapelRepublica;
 import br.csi.rep_hub.model.participacao.ParticipacaoRepublica;

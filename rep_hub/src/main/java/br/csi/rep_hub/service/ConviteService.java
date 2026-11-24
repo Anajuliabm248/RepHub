@@ -1,7 +1,7 @@
 package br.csi.rep_hub.service;
 
-import br.csi.rep_hub.dto.ConviteResposta;
-import br.csi.rep_hub.dto.ParticipacaoResposta;
+import br.csi.rep_hub.dto.convite.ConviteResposta;
+import br.csi.rep_hub.dto.participacao.ParticipacaoResposta;
 import br.csi.rep_hub.infra.AcessoRepublica;
 import br.csi.rep_hub.infra.UsuarioAtual;
 import br.csi.rep_hub.model.convite.Convite;

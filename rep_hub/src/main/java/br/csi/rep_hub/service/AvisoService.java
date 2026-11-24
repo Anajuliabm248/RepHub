@@ -1,7 +1,7 @@
 package br.csi.rep_hub.service;
 
-import br.csi.rep_hub.dto.AvisoDados;
-import br.csi.rep_hub.dto.AvisoResposta;
+import br.csi.rep_hub.dto.avisos.AvisoDados;
+import br.csi.rep_hub.dto.avisos.AvisoResposta;
 import br.csi.rep_hub.infra.AcessoRepublica;
 import br.csi.rep_hub.model.aviso.Aviso;
 import br.csi.rep_hub.model.aviso.AvisoRepository;

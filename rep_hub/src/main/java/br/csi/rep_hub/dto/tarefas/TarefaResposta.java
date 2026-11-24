@@ -1,4 +1,4 @@
-package br.csi.rep_hub.dto;
+package br.csi.rep_hub.dto.tarefas;
 
 import br.csi.rep_hub.model.tarefa.AtribuicaoTarefa;
 import br.csi.rep_hub.model.tarefa.StatusAtribuicao;

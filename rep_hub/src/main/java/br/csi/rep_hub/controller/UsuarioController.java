@@ -1,8 +1,8 @@
 package br.csi.rep_hub.controller;
 
-import br.csi.rep_hub.dto.UsuarioAtualizacao;
-import br.csi.rep_hub.dto.UsuarioCadastro;
-import br.csi.rep_hub.dto.UsuarioResposta;
+import br.csi.rep_hub.dto.auth.UsuarioAtualizacao;
+import br.csi.rep_hub.dto.auth.UsuarioCadastro;
+import br.csi.rep_hub.dto.auth.UsuarioResposta;
 import br.csi.rep_hub.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
