@@ -4,7 +4,7 @@ Esta pasta reúne a documentação de modelagem e planejamento do RepHub, um sis
 
 ## Conteúdo
 
-- **[Ontologia e modelagem conceitual](ontologia_modelagem_conceitual/):** reúne o [documento de ontologia](ontologia_modelagem_conceitual/ontologia_RepHub.pdf) e o [modelo em OntoUML](ontologia_modelagem_conceitual/ontoUML.png), que representam os principais conceitos do domínio, seus relacionamentos e regras de negócio.
+- **[Ontologia e modelagem conceitual](ontologia_modelagem_conceitual/):** reúne o artigo com a ontologia ediagramas ontoUML e o OWL, que representam os principais conceitos do domínio, seus relacionamentos e regras de negócio.
 - **[Diagrama de classes revisado](diagrama_classes_melhorado.png):** apresenta atributos, operações, associações, services e DTOs da versão acadêmica, conforme as regras consolidadas no README principal.
 - **[Diagrama de classes inicial](diagrama_de_classes.png):** versão anterior, preservada como referência; não incorpora todas as decisões atuais.
 - **[Diagrama entidade-relacionamento (ER)](diagrama_ER.png):** proposta relacional derivada das classes consolidadas, com atributos, chaves, cardinalidades e restrições complementares.
