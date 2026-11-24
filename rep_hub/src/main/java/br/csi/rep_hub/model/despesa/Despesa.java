@@ -1,6 +1,7 @@
 package br.csi.rep_hub.model.despesa;
 
 import br.csi.rep_hub.model.republica.Republica;
+import br.csi.rep_hub.model.participacao.ParticipacaoRepublica;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -42,6 +43,10 @@ public class Despesa {
     @Schema(description = "República à qual a despesa pertence")
     private Republica republica;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "criador_id", nullable = false)
+    private ParticipacaoRepublica criador;
+
     @NotBlank
     @Column(nullable = false)
     @Schema(description = "Título de uma despesa", example = "Internet")
@@ -72,6 +77,10 @@ public class Despesa {
 
     @Schema(description = "Data de cancelamento de uma despesa")
     private Instant dataCancelamento;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cancelada_por_id")
+    private ParticipacaoRepublica canceladaPor;
 
     @Enumerated(EnumType.STRING)
     @NotNull
