@@ -16,6 +16,8 @@ public interface ParticipacaoRepublicaRepository extends JpaRepository<Participa
     List<ParticipacaoRepublica> findByRepublicaIdAndStatus(Long republicaId, StatusParticipacao status);
     Optional<ParticipacaoRepublica> findByRepublicaIdAndUsuarioIdAndStatus(
             Long republicaId, Long usuarioId, StatusParticipacao status);
+    List<ParticipacaoRepublica> findByRepublicaIdAndUsuarioIdOrderByDataEntradaAscIdAsc(
+            Long republicaId, Long usuarioId);
     long countByRepublicaIdAndPapelAndStatus(Long republicaId, PapelRepublica papel,
                                              StatusParticipacao status);
 

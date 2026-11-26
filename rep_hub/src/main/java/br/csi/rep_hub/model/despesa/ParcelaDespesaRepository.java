@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,6 +18,19 @@ public interface ParcelaDespesaRepository extends JpaRepository<ParcelaDespesa, 
     List<ParcelaDespesa> findByParticipacao_Usuario_IdAndIncluidaTrueAndDespesa_DataCancelamentoIsNull(
             Long usuarioId);
     Optional<ParcelaDespesa> findByDespesaIdAndParticipacaoId(Long despesaId, Long participacaoId);
+
+    @Query("select p from ParcelaDespesa p join fetch p.despesa d " +
+            "where p.participacao.id in :participacaoIds and p.incluida = true " +
+            "and d.dataCancelamento is null and d.dataReferencia >= :inicio " +
+            "and d.dataReferencia < :fim order by d.dataReferencia, p.id")
+    List<ParcelaDespesa> buscarIncluidasNoPeriodo(
+            @Param("participacaoIds") List<Long> participacaoIds,
+            @Param("inicio") LocalDate inicio, @Param("fim") LocalDate fim);
+
+    @Query("select p from ParcelaDespesa p join fetch p.despesa d " +
+            "where d.id in :despesaIds and p.incluida = true order by p.id")
+    List<ParcelaDespesa> buscarIncluidasDasDespesas(
+            @Param("despesaIds") List<Long> despesaIds);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select p from ParcelaDespesa p where p.id = :id")

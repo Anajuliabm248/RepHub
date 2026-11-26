@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,4 +37,32 @@ public interface PagamentoRepository extends JpaRepository<Pagamento, Long> {
     @Query("select count(p) from Pagamento p where p.parcela.participacao.usuario.id = :usuarioId " +
             "and p.status = br.csi.rep_hub.model.pagamento.StatusPagamento.PENDENTE")
     long contarPendentesDoUsuario(@Param("usuarioId") Long usuarioId);
+
+    @Query("select p from Pagamento p where p.parcela.participacao.id in :participacaoIds " +
+            "and p.status = br.csi.rep_hub.model.pagamento.StatusPagamento.CONFIRMADO " +
+            "and p.dataPagamento >= :inicio and p.dataPagamento < :fim " +
+            "order by p.dataPagamento, p.id")
+    List<Pagamento> buscarConfirmadosDasParticipacoesNoPeriodo(
+            @Param("participacaoIds") List<Long> participacaoIds,
+            @Param("inicio") LocalDate inicio, @Param("fim") LocalDate fim);
+
+    @Query("select p from Pagamento p where p.parcela.despesa.republica.id = :republicaId " +
+            "and p.status = br.csi.rep_hub.model.pagamento.StatusPagamento.CONFIRMADO " +
+            "and p.dataPagamento >= :inicio and p.dataPagamento < :fim " +
+            "order by p.dataPagamento, p.id")
+    List<Pagamento> buscarConfirmadosDaRepublicaNoPeriodo(
+            @Param("republicaId") Long republicaId,
+            @Param("inicio") LocalDate inicio, @Param("fim") LocalDate fim);
+
+    @Query("select p.parcela.id as parcelaId, sum(p.valor) as total " +
+            "from Pagamento p where p.parcela.id in :parcelaIds " +
+            "and p.status = br.csi.rep_hub.model.pagamento.StatusPagamento.CONFIRMADO " +
+            "group by p.parcela.id")
+    List<TotalConfirmadoPorParcela> somarConfirmadosPorParcela(
+            @Param("parcelaIds") List<Long> parcelaIds);
+
+    interface TotalConfirmadoPorParcela {
+        Long getParcelaId();
+        BigDecimal getTotal();
+    }
 }
